@@ -3,7 +3,7 @@ mod tests {
 
     use gen_ser::models::Person;
     use gen_ser::serializer;
-    use gen_ser::serializers::{Borsh, Json, Wincode};
+    use gen_ser::serializers::{Borsh, SerdeJson, Wincode};
     use gen_ser::storage::Storage;
 
     /// Generic test function for any serializer that implements `Serializer<Person>`.
@@ -12,7 +12,7 @@ mod tests {
         S: serializer::Serializer<Person>,
     {
         let person = Person {
-            name: "Devwraithe".to_string(),
+            name: "devwraithe".to_string(),
             age: 30,
         };
 
@@ -37,6 +37,6 @@ mod tests {
 
     #[test]
     fn test_json() {
-        test_serializer(Json);
+        test_serializer(SerdeJson);
     }
 }

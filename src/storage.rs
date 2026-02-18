@@ -3,7 +3,7 @@ use std::marker::PhantomData;
 
 use crate::serializer::Serializer;
 
-/// In-memory byte store backed by a pluggable serializer.
+/// In-memory byte store
 pub struct Storage<T, S: Serializer<T>> {
     data: Option<Vec<u8>>,
     serializer: S,
@@ -19,7 +19,7 @@ impl<T, S: Serializer<T>> Storage<T, S> {
         }
     }
 
-    /// Persists `value` as bytes. No-ops if data is already stored.
+    /// Serialize and store value if not already
     pub fn save(&mut self, value: &T) {
         if self.data.is_none() {
             self.data = Some(
@@ -30,7 +30,7 @@ impl<T, S: Serializer<T>> Storage<T, S> {
         }
     }
 
-    /// Deserializes and returns the stored value.
+    /// Deserialize and return the stored value.
     pub fn load(&self) -> Result<T, Box<dyn Error>> {
         let bytes = self.data.as_deref().ok_or("no data stored")?;
         self.serializer.from_bytes(bytes)
