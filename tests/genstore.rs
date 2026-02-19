@@ -10,15 +10,16 @@ mod tests {
     fn test_serializer<S>(serializer: S)
     where
         S: serializer::Serializer<Person>,
+        S::Error: std::fmt::Debug,
     {
         let person = Person {
             name: "devwraithe".to_string(),
-            age: 30,
+            age: 25,
         };
 
         let mut storage = Storage::new(serializer);
 
-        storage.save(&person);
+        let _ = storage.save(&person);
         assert!(storage.has_data());
 
         let saved_person: Person = storage.load().unwrap();
