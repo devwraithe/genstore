@@ -1,8 +1,9 @@
 #[cfg(test)]
 mod tests {
 
+    use gen_ser::conversion::convert;
     use gen_ser::models::Person;
-    use gen_ser::serializer;
+    use gen_ser::serializer::{self, Serializer};
     use gen_ser::serializers::{Borsh, SerdeJson, Wincode};
     use gen_ser::storage::Storage;
 
@@ -26,6 +27,21 @@ mod tests {
         assert_eq!(saved_person, person);
     }
 
+    fn test_conversion() -> Result<(), Box<dyn std::error::Error>> {
+        let person = Person {
+            name: "devwraithe".to_string(),
+            age: 25,
+        };
+
+        let borsh_bytes = Borsh.to_bytes(&person).unwrap();
+        let serde_json_bytes = SerdeJson.to_bytes(&person).unwrap();
+
+        let converted_bytes = convert::<Person, _, _>(&borsh_bytes, &Borsh, &SerdeJson)?;
+        assert_eq!(converted_bytes, serde_json_bytes);
+
+        Ok(())
+    }
+
     #[test]
     fn test_borsh() {
         test_serializer(Borsh);
@@ -39,5 +55,10 @@ mod tests {
     #[test]
     fn test_json() {
         test_serializer(SerdeJson);
+    }
+
+    #[test]
+    fn test_convert() {
+        let _ = test_conversion();
     }
 }

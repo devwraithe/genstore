@@ -1,6 +1,5 @@
-use std::marker::PhantomData;
-
 use crate::serializer::Serializer;
+use std::marker::PhantomData;
 
 /// In-memory byte store
 pub struct Storage<T, S: Serializer<T>> {
